@@ -1,8 +1,7 @@
 #!/bin/bash
 
 LOGS_FOLDER="/var/log/expense"
-SCRIPT_NAME=$(basename $0 | cut -d "." -f1)
-#SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
+SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
 TIMESTAMP=$(date +%Y-%m-%d-%H-%M-%S)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME-$TIMESTAMP.log"
 mkdir -p $LOGS_FOLDER
@@ -36,19 +35,19 @@ echo "Script started executing at: $(date)" | tee -a $LOG_FILE
 CHECK_ROOT
 
 dnf install nginx -y &>>$LOG_FILE
-VALIDATE $? "installing nginx"
+VALIDATE $? "installing Nginx"
 
 systemctl enable nginx &>>$LOG_FILE
 VALIDATE $? "Enable Nginx"
 
 systemctl start nginx &>>$LOG_FILE
-VALIDATE $? "start nginx"
+VALIDATE $? "start Nginx"
 
 rm -rf /usr/share/nginx/html/* &>>$LOG_FILE
 VALIDATE $? "Removing default website"
 
 curl -o /tmp/frontend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expense-frontend-v2.zip &>>$LOG_FILE
-VALIDATE $? "Downloading backend application code"
+VALIDATE $? "Downloading frontend application code"
 
 cd /usr/share/nginx/html
 unzip /tmp/frontend.zip &>>$LOG_FILE

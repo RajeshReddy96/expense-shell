@@ -1,8 +1,7 @@
 #!/bin/bash
 
 LOGS_FOLDER="/var/log/expense"
-SCRIPT_NAME=$(basename $0 | cut -d "." -f1)
-#SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
+SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
 TIMESTAMP=$(date +%Y-%m-%d-%H-%M-%S)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME-$TIMESTAMP.log"
 mkdir -p $LOGS_FOLDER
@@ -47,7 +46,7 @@ VALIDATE $? "Install nodejs"
 id expense &>>$LOG_FILE
 if [ $? -ne 0 ]
 then
-    echo -e " expense user not exists..$G Creating $N"
+    echo -e " expense user not exists.. $G Creating $N"
     useradd expense &>>$LOG_FILE
     VALIDATE $? "creating expense user"
 else
@@ -77,13 +76,13 @@ mysql -h mysql.rrajesh.online -uroot -pExpenseApp@1 < /app/schema/backend.sql &>
 VALIDATE $? "Schema loading"
 
 systemctl daemon-reload &>>$LOG_FILE
-VALIDATE $? "Daemon loading"
+VALIDATE $? "Daemon reload"
 
 systemctl enable backend &>>$LOG_FILE
 VALIDATE $? "Enabled backend"
 
 systemctl restart backend &>>$LOG_FILE
-VALIDATE $? "Restart backend"
+VALIDATE $? "Restarted backend"
 
 
 

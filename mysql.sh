@@ -1,8 +1,7 @@
 #!/bin/bash
 
 LOGS_FOLDER="/var/log/expense"
-SCRIPT_NAME=$(basename $0 | cut -d "." -f1)
-#SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
+SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
 TIMESTAMP=$(date +%Y-%m-%d-%H-%M-%S)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME-$TIMESTAMP.log"
 mkdir -p $LOGS_FOLDER
@@ -35,19 +34,19 @@ echo "Script started executing at: $(date)" | tee -a $LOG_FILE
 
 CHECK_ROOT
 
-dnf install mysql-server -y &>>LOG_FILE
+dnf install mysql-server -y &>>$LOG_FILE
 VALIDATE $? "Installing mysql server"
 
-systemctl enable mysqld &>>LOG_FILE
+systemctl enable mysqld &>>$LOG_FILE
 VALIDATE $? "Enabled mysql server"
 
-systemctl start mysqld &>>LOG_FILE
+systemctl start mysqld &>>$LOG_FILE
 VALIDATE $? "started mysql server"
 
-mysql -h mysql.rrajesh.online -u root -pExpenseApp@1 -e 'show databases;' &>>LOG_FILE
+mysql -h mysql.rrajesh.online -u root -pExpenseApp@1 -e 'show databases;' &>>$LOG_FILE
 if [ $? -ne 0 ]
 then
-    echo "mysql root password is not setup, setting now" &>>LOG_FILE
+    echo "mysql root password is not setup, setting now" &>>$LOG_FILE
     mysql_secure_installation --set-root-pass ExpenseApp@1
     VALIDATE $? "Setting up root password"
 else
